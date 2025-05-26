@@ -1,7 +1,7 @@
 {
-    "name": "Sixt Benghazi - Ride Booking Demo",
+    "name": "Sixt Benghazi - Premium Ride Booking",
     "short_name": "Sixt Benghazi",
-    "start_url": ".",
+    "start_url": "/",
     "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#F4811E",
@@ -12,16 +12,19 @@
     "categories": ["travel", "transportation", "business"],
     "lang": "en",
     "dir": "ltr",
+    "id": "sixt-benghazi-ride-booking",
     "icons": [
         {
             "src": "icons/Icon-192.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
         },
         {
             "src": "icons/Icon-512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
         },
         {
             "src": "icons/Icon-maskable-192.png",
@@ -41,7 +44,22 @@
             "src": "icons/Icon-512.png",
             "sizes": "512x512",
             "type": "image/png",
-            "form_factor": "wide"
+            "form_factor": "wide",
+            "label": "Sixt Benghazi ride booking interface"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Book a Ride",
+            "short_name": "Book Ride",
+            "description": "Quickly book a premium ride in Benghazi",
+            "url": "/",
+            "icons": [
+                {
+                    "src": "icons/Icon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
         }
     ]
 }
