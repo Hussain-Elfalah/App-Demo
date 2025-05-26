@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'dart:ui' as ui;
 
 class BenghaziMap extends StatefulWidget {
   final double height;
@@ -382,7 +383,7 @@ class BenghaziMapPainter extends CustomPainter {
       ..color = isDarkTheme ? const Color(0xFF1A4A6B) : const Color(0xFF4A90E2)
       ..style = PaintingStyle.fill;
 
-    final coastPath = Path();
+    final coastPath = ui.Path();
     coastPath.moveTo(0, 0);
     coastPath.lineTo(size.width, 0);
     coastPath.lineTo(size.width, size.height * 0.3);
