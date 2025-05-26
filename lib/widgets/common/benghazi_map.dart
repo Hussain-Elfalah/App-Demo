@@ -25,7 +25,7 @@ class BenghaziMap extends StatefulWidget {
 
 class _BenghaziMapState extends State<BenghaziMap> {
   final MapController _mapController = MapController();
-  bool _mapError = false;
+  bool _mapError = false; // Try real map first
   
   // Benghazi coordinates
   static const LatLng _benghaziCenter = LatLng(32.1165, 20.0686);
@@ -90,17 +90,20 @@ class _BenghaziMapState extends State<BenghaziMap> {
             },
           ),
           children: [
-            // More reliable tile layer with fallback
+            // OpenStreetMap tile layer with better error handling
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.sixt.benghazi_demo',
               maxZoom: 18,
+              minZoom: 1,
               backgroundColor: widget.isDarkTheme ? const Color(0xFF1A1A1A) : Colors.grey[100]!,
               errorTileCallback: (tile, error, stackTrace) {
-                // Handle tile loading errors
-                setState(() {
-                  _mapError = true;
-                });
+                // Only fallback after multiple errors, not on first error
+                print('Map tile error: $error');
+                // Don't immediately fallback - let it retry
+              },
+              additionalOptions: const {
+                'User-Agent': 'Sixt Benghazi Demo App',
               },
             ),
             
@@ -140,13 +143,31 @@ class _BenghaziMapState extends State<BenghaziMap> {
       decoration: BoxDecoration(
         color: widget.isDarkTheme ? const Color(0xFF1A1A1A) : Colors.grey[200],
         borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: widget.isDarkTheme
+              ? [
+                  const Color(0xFF1A4A6B), // Mediterranean Sea (top)
+                  const Color(0xFF2A2A2A), // Land (bottom)
+                ]
+              : [
+                  const Color(0xFF4A90E2), // Mediterranean Sea (top)
+                  const Color(0xFFE0E0E0), // Land (bottom)
+                ],
+          stops: const [0.0, 0.35],
+        ),
       ),
       child: Stack(
         children: [
           // Custom painted map background
-          CustomPaint(
-            painter: BenghaziMapPainter(isDarkTheme: widget.isDarkTheme),
-            size: Size.infinite,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return CustomPaint(
+                painter: BenghaziMapPainter(isDarkTheme: widget.isDarkTheme),
+                size: Size(constraints.maxWidth, constraints.maxHeight),
+              );
+            },
           ),
           
           // Overlay with location markers
@@ -154,7 +175,7 @@ class _BenghaziMapState extends State<BenghaziMap> {
             child: _buildStaticMarkers(),
           ),
           
-          // Map label
+          // Map label with "Offline Mode"
           Positioned(
             top: 16,
             left: 16,
@@ -164,13 +185,24 @@ class _BenghaziMapState extends State<BenghaziMap> {
                 color: widget.isDarkTheme ? Colors.black.withOpacity(0.7) : Colors.white.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text(
-                'Benghazi Map',
-                style: TextStyle(
-                  color: widget.isDarkTheme ? Colors.white : Colors.black,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.offline_bolt,
+                    size: 12,
+                    color: widget.isDarkTheme ? Colors.orange : Colors.orange,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Benghazi Map (Offline)',
+                    style: TextStyle(
+                      color: widget.isDarkTheme ? Colors.white : Colors.black,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

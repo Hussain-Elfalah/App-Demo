@@ -152,18 +152,7 @@
       setTimeout(showIOSInstallBanner, 2000);
     });
 
-    // Enhanced Service Worker Registration for PWA
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('flutter-first-frame', function () {
-        navigator.serviceWorker.register('flutter_service_worker.js')
-          .then(function(registration) {
-            console.log('Service Worker registered successfully:', registration);
-          })
-          .catch(function(error) {
-            console.log('Service Worker registration failed:', error);
-          });
-      });
-    }
+    // Service Worker will be registered automatically by flutter.js
 
     // Enhanced PWA Install Prompt
     let deferredPrompt;
